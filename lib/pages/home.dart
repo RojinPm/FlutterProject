@@ -4,6 +4,7 @@ import 'package:flutter_application_1/models/category_models.dart';
 import 'package:flutter_application_1/models/slider_model.dart';
 import 'package:flutter_application_1/services/data.dart';
 import 'package:flutter_application_1/services/slider_data.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 
 class Home extends StatefulWidget {
@@ -18,6 +19,8 @@ class _HomeState extends State<Home> {
 
 List<CategoryModel> categories = [];
 List<sliderModel> sliders = [];
+
+int activeIndex=0;
 
   @override
   void initState(){
@@ -82,15 +85,26 @@ List<sliderModel> sliders = [];
          },
           
           options: CarouselOptions(
-       height:200, 
+       height:250, 
        autoPlay: true,
 
        enlargeCenterPage: true,
-       enlargeStrategy: CenterPageEnlargeStrategy.height
+       enlargeStrategy: CenterPageEnlargeStrategy.height,
+       onPageChanged:(index, reason){
+
+         setState((){
+
+            activeIndex=index;
+
+         });
+
+       } 
        
          ),
        ),
-     )
+     ),
+         SizedBox(height: 30.0,),
+         buildIndicator()
 
            ],
 
@@ -114,15 +128,25 @@ List<sliderModel> sliders = [];
        
        ),
        Container(
+         height:250,
+         padding: EdgeInsets.only(left: 10.0),
          margin: EdgeInsets.only(top: 150.0),
          width:MediaQuery.of(context).size.width,
-         decoration: BoxDecoration(color: Colors.black26),
+         decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
+        child:Text(name, style: TextStyle(color:Colors.white, fontSize:18.0,fontWeight: FontWeight.bold))
+       
        )
     ],
      
    ),
 
   );
+  Widget buildIndicator()=> AnimatedSmoothIndicator(
+    activeIndex: activeIndex, 
+    count: sliders.length,
+    effect: SlideEffect(dotWidth: 20, dotHeight: 20, activeDotColor:Colors.blue),
+    
+    );
 }
 
   class CategoryTile extends StatelessWidget {
